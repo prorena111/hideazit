@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>모임 초대 — 기혼자의 비밀아지트</title>
+<!--
+  방 초대 링크가 여는 페이지. GitHub Pages: https://prorena111.github.io/hideazit/join.html
+  원본은 앱 저장소 docs/pages/. 여기서 고치고 hideazit 저장소에 올린다(앱 lib/data/links.dart의 kWebBase와 같은 주소).
+-->
+
+<style>
+body{font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;max-width:480px;margin:0 auto;padding:40px 20px 64px;color:#191720;background:#FAF8F4;line-height:1.7;text-align:center}
+h1{font-size:22px;margin:18px 0 6px}
+p{margin:6px 0;color:#4A4658;font-size:15px}
+.lamp{font-size:56px;line-height:1}
+.code{display:inline-block;margin:14px 0 4px;padding:8px 18px;border-radius:12px;background:#F2EDE4;font-size:22px;font-weight:800;letter-spacing:4px}
+.btn{display:block;margin:12px auto 0;max-width:320px;padding:14px 16px;border-radius:14px;font-size:16px;font-weight:700;text-decoration:none}
+.main{background:#F0B429;color:#191720}
+.sub{background:#fff;color:#191720;border:1px solid #EAE5DC}
+.note{margin-top:22px;font-size:13px;color:#8A8597}
+.hide{display:none}
+</style></head><body>
+<div class="lamp">🏮</div>
+<h1>비밀아지트 모임 초대</h1>
+<p id="lead">앱에서 모임을 열고 있어요…</p>
+<div id="codeBox" class="hide"><div class="code" id="code"></div><p>참여 코드 · 앱에 미리 들어가요</p></div>
+<a id="open" class="btn main" href="#">앱에서 열기</a>
+<a id="store" class="btn sub" href="https://play.google.com/store/apps/details?id=kr.khancompany.hideazit">Play 스토어에서 받기</a>
+<p class="note" id="note">앱이 없으면 먼저 받아 주세요. 받은 뒤 이 링크를 다시 누르면 모임이 열려요.</p>
+<p class="note">기혼자의 비밀아지트 · 만 19세 이상 기혼자 전용</p>
+<script>
+(function () {
+  var store = 'https://play.google.com/store/apps/details?id=kr.khancompany.hideazit';
+  var q = new URLSearchParams(location.search);
+  // 모양이 맞는 값만 쓴다(앱도 같은 규칙으로 다시 본다).
+  var m = /^[A-Za-z0-9_-]{1,64}$/.test(q.get('m') || '') ? q.get('m') : '';
+  var c = /^[0-9]{4,8}$/.test(q.get('c') || '') ? q.get('c') : '';
+  var lead = document.getElementById('lead');
+  var open = document.getElementById('open');
+  if (!m) {
+    lead.textContent = '초대 링크가 올바르지 않아요. 방장에게 링크를 다시 받아 주세요.';
+    open.className = 'hide';
+    return;
+  }
+  if (c) {
+    document.getElementById('code').textContent = c;
+    document.getElementById('codeBox').className = '';
+  }
+  var query = 'm=' + encodeURIComponent(m) + (c ? '&c=' + encodeURIComponent(c) : '');
+  var app = 'hideazit://join?' + query;
+  var android = /Android/i.test(navigator.userAgent);
+  if (android) {
+    // 안드로이드 — 앱이 있으면 열고, 없으면 Play 스토어로.
+    var intent = 'intent://join?' + query +
+      '#Intent;scheme=hideazit;package=kr.khancompany.hideazit;' +
+      'S.browser_fallback_url=' + encodeURIComponent(store) + ';end';
+    open.href = intent;
+    lead.textContent = '앱이 열리지 않으면 아래 「앱에서 열기」를 눌러 주세요.';
+    setTimeout(function () { location.href = intent; }, 150);
+  } else {
+    open.href = app;
+    lead.textContent = '안드로이드 폰에서 이 링크를 열어 주세요.';
+    document.getElementById('note').textContent = '지금은 안드로이드 앱만 있어요.';
+  }
+})();
+</script>
+</body></html>
