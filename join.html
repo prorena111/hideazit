@@ -2,11 +2,9 @@
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>모임 초대 — 기혼자의 비밀아지트</title>
-<!--
-  방 초대 링크가 여는 페이지. GitHub Pages: https://prorena111.github.io/hideazit/join.html
-  원본은 앱 저장소 docs/pages/. 여기서 고치고 hideazit 저장소에 올린다(앱 lib/data/links.dart의 kWebBase와 같은 주소).
--->
+<meta property="og:title" content="모임 초대장">
+<meta property="og:description" content="눌러서 열어 주세요">
+<title>모임 초대장</title>
 
 <style>
 body{font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;max-width:480px;margin:0 auto;padding:40px 20px 64px;color:#191720;background:#FAF8F4;line-height:1.7;text-align:center}
@@ -20,17 +18,19 @@ p{margin:6px 0;color:#4A4658;font-size:15px}
 .note{margin-top:22px;font-size:13px;color:#8A8597}
 .hide{display:none}
 </style></head><body>
-<div class="lamp">🏮</div>
-<h1>비밀아지트 모임 초대</h1>
+<div class="lamp">☕</div>
+<h1>기혼의 비밀 아지트 모임 초대</h1>
 <p id="lead">앱에서 모임을 열고 있어요…</p>
 <div id="codeBox" class="hide"><div class="code" id="code"></div><p>참여 코드 · 앱에 미리 들어가요</p></div>
 <a id="open" class="btn main" href="#">앱에서 열기</a>
 <a id="store" class="btn sub" href="https://play.google.com/store/apps/details?id=kr.khancompany.hideazit">Play 스토어에서 받기</a>
 <p class="note" id="note">앱이 없으면 먼저 받아 주세요. 받은 뒤 이 링크를 다시 누르면 모임이 열려요.</p>
-<p class="note">기혼자의 비밀아지트 · 19세 이상 기혼자 전용</p>
+<p class="note">기혼의 비밀 아지트 · 기혼자만 가능</p>
 <script>
 (function () {
   var store = 'https://play.google.com/store/apps/details?id=kr.khancompany.hideazit';
+  // App Store 심사가 끝나 앱 번호가 나오면 채운다(https://apps.apple.com/kr/app/id번호). 비어 있으면 받기 단추를 숨긴다.
+  var appStore = '';
   var q = new URLSearchParams(location.search);
   // 모양이 맞는 값만 쓴다(앱도 같은 규칙으로 다시 본다).
   var m = /^[A-Za-z0-9_-]{1,64}$/.test(q.get('m') || '') ? q.get('m') : '';
@@ -57,10 +57,22 @@ p{margin:6px 0;color:#4A4658;font-size:15px}
     open.href = intent;
     lead.textContent = '앱이 열리지 않으면 아래 「앱에서 열기」를 눌러 주세요.';
     setTimeout(function () { location.href = intent; }, 150);
+  } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    // 아이폰 — 앱이 없을 때 주소를 바로 열면 사파리가 오류 창을 띄우니 눌러서 연다.
+    open.href = app;
+    lead.textContent = '아래 「앱에서 열기」를 눌러 주세요.';
+    var get = document.getElementById('store');
+    if (appStore) {
+      get.href = appStore;
+      get.textContent = 'App Store에서 받기';
+    } else {
+      get.className = 'hide';
+      document.getElementById('note').textContent = '아이폰 앱은 곧 나와요.';
+    }
   } else {
     open.href = app;
-    lead.textContent = '안드로이드 폰에서 이 링크를 열어 주세요.';
-    document.getElementById('note').textContent = '지금은 안드로이드 앱만 있어요.';
+    lead.textContent = '휴대폰에서 이 링크를 열어 주세요.';
+    document.getElementById('note').textContent = '앱은 휴대폰에서 받을 수 있어요.';
   }
 })();
 </script>
